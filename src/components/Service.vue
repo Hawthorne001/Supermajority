@@ -8,7 +8,7 @@
                 <template v-else>
                     <a :href="service.website" target="_blank">{{ service.name }}</a>
                 </template>
-                <span class="ml-1 mr-auto text-base" v-tooltip="{ content: 'Market Share', delay: 0, triggers: ['hover', 'click'] }">({{ service.marketShareFormatted }})</span>
+                <span class="ml-1 mr-auto" v-tooltip="{ content: 'Market Share', delay: 0, triggers: ['hover', 'click'] }">({{ service.marketShareFormatted }})</span>
 
                 <template v-if="service.twitter">
                     <a :href="service.twitter" target="_blank" v-tooltip="{ content: 'Twitter', delay: 0 }">
@@ -35,13 +35,16 @@
                 </template>
             </splitpanes>
         </div>
-        <Button icon="pi pi-plus" class="bg-orange-400 ml-2 self-end rounded-full w-8 h-8 mb-1" :disabled="addMenuItems.length === 0" @click="toggleAddMenu" />
+        <Button icon="pi pi-plus" severity="secondary" outlined class="ml-2 self-end w-8 h-8 mb-1" :disabled="addMenuItems.length === 0" @click="toggleAddMenu" />
         <Menu ref="addMenu" :model="addMenuItems" :popup="true" />
-        <Button icon="pi pi-minus" class="bg-orange-400 ml-2 self-end rounded-full w-8 h-8 mb-1" :disabled="removeMenuItems.length === 1" @click="toggleRemoveMenu" />
+        <Button icon="pi pi-minus" severity="secondary" outlined class="ml-2 self-end w-8 h-8 mb-1" :disabled="removeMenuItems.length === 1" @click="toggleRemoveMenu" />
         <Menu ref="removeMenu" :model="removeMenuItems" :popup="true" />
     </div>
-    <template v-if="['Kraken', 'OKX', 'Binance'].includes(service.name)">
-        <span class="text-base font-bold">*Risky! No public data available.</span>
+    <template v-if="['Unlisted Entities', 'Binance'].includes(service.name)">
+        <span class="font-bold">*Based on graffiti data.</span>
+    </template>
+    <template v-if="['Kraken', 'OKX'].includes(service.name)">
+        <span class="font-bold">*Risky! No public data available.</span>
     </template>
 </template>
 
@@ -58,20 +61,15 @@
     const wavePattern = ref(false)
     const showTooltips = ref(false)
     const splitpaneKey = ref(0) // Used to force a rerender
-    const addMenu = ref<Menu | null>(null)
-    const removeMenu = ref<Menu | null>(null)
+    const addMenu = ref<typeof Menu | null>(null)
+    const removeMenu = ref<typeof Menu | null>(null)
 
     const addMenuItems = computed(() => {
-        let options = ['Geth', 'Nethermind', 'Besu', 'Erigon', 'Reth', 'Unknown']
-
-        if (service.name === "Rocket Pool") {  // Easter Egg
-            options = ['Geth', 'Nethermind', 'Besu', 'Erigon', 'rETH', 'Unknown']
-        }
-
+        let options = ['Geth', 'Nethermind', 'Besu', 'Erigon', 'Reth', 'Unknown', 'Cross-Validation']
         const list: MenuItem[] = []
 
         options.forEach(name => {
-            if (!service.allocation.find(client => client.name === name.replace('rETH', 'Reth'))) { // Easter Egg
+            if (!service.allocation.find(client => client.name === name)) {
                 list.push({ label: name, command: addCommand })
             }
         })
@@ -159,10 +157,6 @@
         })
 
         let name = event.item.label as string
-
-        if (name === "rETH") { // Easter Egg
-            name = "Reth"
-        }
 
         service.allocation.push({
             name,

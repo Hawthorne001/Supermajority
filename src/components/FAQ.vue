@@ -1,9 +1,6 @@
 <template>
-    <div v-if="showFAQ" class="flex-1 min-w-80 m-5">
-        <div class="flex justify-between">
-            <h2>FAQ</h2>
-            <Button type="button" icon="pi pi-times" class="bg-blue-500 text-white p-1" @click="() => showFAQ = false" v-tooltip="{ content: 'Hide FAQ', delay: 0 }" />
-        </div>
+    <div class="p-5">
+        <h2>FAQ</h2>
         <ul>
             <li>
                 <h3>What is this website about?</h3>
@@ -78,32 +75,30 @@
                 <a href="https://eth2book.info/bellatrix/part2/incentives/diversity/" target="_blank">[2] eth2book.info - Diversity</a>
                 <a href="https://mirror.xyz/jmcook.eth/S7ONEka_0RgtKTZ3-dakPmAHQNPvuj15nh0YGKPFriA" target="_blank">[3] jmcook.eth - Client diversity on Ethereum's consensus layer</a>
                 <a href="https://labrys.io/insights/geth-staking" target="_blank">Yes, you really can lose all your ETH if you stake with Geth</a>
+                <a href="https://www.kiln.fi/post/ethereum-client-diversity-part-1-consensus-finalization" target="_blank">Ethereum Client Diversity Part 1: Consensus and Finalization</a>
+                <a href="https://www.kiln.fi/post/ethereum-client-diversity-part-2-execution-layer-diversity" target="_blank">Ethereum Client Diversity Part 2: Execution-layer Diversity</a>
+                <a href="https://www.kiln.fi/post/ethereum-client-diversity-part-3-consensus-layer-diversity" target="_blank">Ethereum Client Diversity Part 3: Consensus-layer Diversity</a>
             </li>
         </ul>
     </div>
 </template>
 
-<script setup lang="ts">
-    import Button from 'primevue/button'
-    import { ref } from 'vue'
-
-    const showFAQ = ref(true)
-</script>
-
 <style scoped>
-    ul>li {
-        @apply flex flex-col mt-2
-    }
+@reference "@/assets/main.css";
 
-    ul>li>h3 {
-        @apply mb-1
-    }
+ul>li {
+    @apply flex flex-col mt-2
+}
 
-    ul>li>span {
-        @apply mb-2
-    }
+ul>li>h3 {
+    @apply mb-1
+}
 
-    a {
-        @apply link
-    }
+ul>li>span {
+    @apply mb-2
+}
+
+a {
+    @apply link
+}
 </style>

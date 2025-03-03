@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -8,7 +9,8 @@ export default defineConfig({
     host: '::'
   },
   plugins: [
-    vue()
+    vue(),
+    tailwindcss()
   ],
   resolve: {
     alias: {
@@ -18,7 +20,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        assetFileNames: `assets/[name].[ext]`
+        assetFileNames(assetInfo) {
+          if (assetInfo.name?.endsWith('css')) {
+            return 'assets/[name]-[hash].[ext]'
+          }
+
+          return 'assets/[name].[ext]'
+        }
       }
     }
   }

@@ -2,17 +2,17 @@ import { numberToPercent, type TotalDistribution, type Service } from '@/lib'
 import { ref, computed, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
-const totalValidators = 1013012
+const totalValidators = 1074369
 
 export const useDistributionStore = defineStore('distribution', () => {
     const services: Ref<Service[]> = ref([])
 
     const allocation = computed(() => {
-        const map = new Map<string, number>().set('Unknown', 0).set('Geth', 0).set('Nethermind', 0).set('Besu', 0).set('Erigon', 0).set('Reth', 0)
+        const map = new Map<string, number>().set('Unknown', 0).set('Nethermind', 0).set('Geth', 0).set('Besu', 0).set('Erigon', 0).set('Reth', 0) // .set('Cross-Validation', 0)
 
         services.value.forEach(service => {
             service.allocation.forEach(client => {
-                map.set(client.name, (map.get(client.name) || 0) + client.count);
+                map.set(client.name, (map.get(client.name) || 0) + client.count)
             })
         })
 
@@ -74,12 +74,37 @@ export const useDistributionStore = defineStore('distribution', () => {
             included += count
         })
 
+        const unlisted = totalValidators - included
+
+        // Based on graffiti data
         services.value.push({
             name: 'Unlisted Entities',
-            allocation: [{
-                name: 'Unknown',
-                count: totalValidators - included
-            }]
+            allocation: [
+                {
+                    name: 'Nethermind',
+                    count: Math.floor(unlisted * 0.1178)
+                },
+                {
+                    name: 'Geth',
+                    count: Math.floor(unlisted * 0.1021)
+                },
+                {
+                    name: 'Besu',
+                    count: Math.floor(unlisted * 0.0217)
+                },
+                {
+                    name: 'Reth',
+                    count: Math.floor(unlisted * 0.008)
+                },
+                {
+                    name: 'Unknown',
+                    count: Math.floor(unlisted * 0.7504)
+                },
+                // {
+                //     name: 'Erigon',
+                //     count: unlisted * 0
+                // }
+            ]
         })
     }
 
